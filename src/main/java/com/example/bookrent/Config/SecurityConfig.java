@@ -3,6 +3,7 @@ package com.example.bookrent.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,9 +15,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
+
+    private static final List<String> PUBLIC_APIS = Arrays.asList(
+            "/api/books/popular",
+            "/api/books/highly-rated",
+            "/api/books/search"
+    );
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,6 +36,8 @@ public class SecurityConfig {
                 .sessionManagement(mgmt -> mgmt.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // stateless session for JWT
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll() // Whitelist H2 console
+                        .requestMatchers(PUBLIC_APIS.toArray(new String[0])).permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated() // Protect /api endpoints
                         .anyRequest().permitAll()) // Permit all other requests (optional)
                 .addFilterBefore(new JwtTokenValidator(), UsernamePasswordAuthenticationFilter.class)  // Add JWT filter before UsernamePasswordAuthenticationFilter

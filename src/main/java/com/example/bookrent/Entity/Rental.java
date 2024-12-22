@@ -1,5 +1,6 @@
 package com.example.bookrent.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,8 +19,16 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long bookId;
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference("userRental")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    @JsonBackReference("bookRental")
+    private Book book;
+
     private LocalDate rentalStartDate;
     private LocalDate rentalEndDate;
     private Boolean isReturned;

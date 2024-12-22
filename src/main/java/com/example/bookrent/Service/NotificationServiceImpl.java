@@ -38,22 +38,33 @@ public class NotificationServiceImpl implements NotificationService{
         );
     }
 
-    public List<NotificationDto> getAllNotifications() {
-        List<Notification> notifications = notificationRepo.findAll();
+
+    @Override
+    public List<NotificationDto> getNotificationsForUser(Long userId) {
+        // Fetch all notifications for the user (both global and user-specific)
+        List<Notification> notifications = notificationRepo.findByUserIdOrIsGlobalTrue(userId);
+
         if (notifications.isEmpty()) {
-            throw new ResourceNotFoundException("No notifications found");
+            throw new ResourceNotFoundException("No notifications found for this user");
         }
-//        return notifications.stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-        return Converter.convertToDtoList(notifications,NotificationDto.class);
+
+        // Convert to DTO list
+        return notifications.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
+    @Override
     public void sendNotifications() {
         List<Notification> notifications = notificationRepo.findByIsSentFalse();
         for (Notification notification : notifications) {
             if (notification.getScheduledTime().isBefore(LocalDateTime.now())) {
-                System.out.println("Notification sent to user " + notification.getUserId() + ": " + notification.getMessage());
+                // Send notification to users
+                if (notification.getIsGlobal()) {
+                    System.out.println("Global Notification sent: " + notification.getMessage());
+                } else {
+                    System.out.println("Notification sent to user " + notification.getUserId() + ": " + notification.getMessage());
+                }
                 notification.setIsSent(true);
                 notificationRepo.save(notification);
             }

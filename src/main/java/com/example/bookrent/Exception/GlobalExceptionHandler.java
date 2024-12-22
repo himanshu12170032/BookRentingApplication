@@ -17,6 +17,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> userAlreadyExistException(UserAlreadyExistsException ex, WebRequest req) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),req.getDescription(false), LocalDateTime.now());
+        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.OK);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex,WebRequest req) {
         ErrorResponse errorResponse = new ErrorResponse("Internal server error", req.getDescription(false), LocalDateTime.now() );

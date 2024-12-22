@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RentalRepo extends JpaRepository<Rental,Long> {
     List<Rental> findByUserId(Long userId);
+    long countByUserIdAndIsReturned(Long userId, Boolean isReturned);
 }

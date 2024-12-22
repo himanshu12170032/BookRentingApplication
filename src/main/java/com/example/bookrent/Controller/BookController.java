@@ -1,18 +1,28 @@
 package com.example.bookrent.Controller;
 
 import com.example.bookrent.Dto.BookDto;
+import com.example.bookrent.Entity.Role;
+import com.example.bookrent.Exception.UserNotFoundException;
 import com.example.bookrent.Service.BookService;
+import com.example.bookrent.Service.UserService;
+import com.example.bookrent.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
+
     @Autowired
     BookService bookService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks() {
@@ -35,7 +45,18 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDTO) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BookDto> addBook(
+            @RequestBody BookDto bookDTO,
+            @RequestHeader("Authorization") String jwt) throws UserNotFoundException {
+
+        User user = userService.findUserByProfile(jwt);
+
+        if (!user.getRole().equals(Role.ADMIN)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+
         BookDto addedBook = bookService.addBook(bookDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedBook);
     }

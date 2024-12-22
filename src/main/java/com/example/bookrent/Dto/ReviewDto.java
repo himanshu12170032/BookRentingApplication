@@ -11,6 +11,6 @@ public class ReviewDto {
     private Long id;
     private Long userId;
     private Long bookId;
-    private Integer rating;
+    private Double rating;
     private String reviewText;
 }

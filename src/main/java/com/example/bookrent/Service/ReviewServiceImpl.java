@@ -3,11 +3,14 @@ package com.example.bookrent.Service;
 import com.example.bookrent.Dto.ReviewDto;
 import com.example.bookrent.Entity.Book;
 import com.example.bookrent.Entity.Review;
+import com.example.bookrent.Entity.User;
 import com.example.bookrent.Repository.BookRepo;
 import com.example.bookrent.Repository.ReviewRepo;
+import com.example.bookrent.Repository.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
@@ -21,7 +24,7 @@ public class ReviewServiceImpl implements ReviewService{
         this.userRepo = userRepo;
     }
 
-    public ReviewDto submitReview(Long userId, Long bookId, Integer rating, String reviewText) {
+    public ReviewDto submitReview(Long userId, Long bookId, Double rating, String reviewText) {
         User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Book book = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
 
@@ -43,6 +46,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     public Double getAverageRatingForBook(Long bookId) {
         List<Review> reviews = reviewRepo.findByBookId(bookId);
-        return reviews.stream().mapToInt(Review::getRating).average().orElse(0.0);
+        return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
     }
+
 }

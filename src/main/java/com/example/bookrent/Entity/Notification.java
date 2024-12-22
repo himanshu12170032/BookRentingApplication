@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,5 +21,7 @@ public class Notification {
     private String message;
     private LocalDateTime scheduledTime;
     private Boolean isSent;
+
+    private Boolean isGlobal;
 }
 

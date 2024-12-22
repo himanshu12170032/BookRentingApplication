@@ -1,7 +1,12 @@
 package com.example.bookrent.Controller;
 
 import com.example.bookrent.Dto.ReviewDto;
+import com.example.bookrent.Entity.User;
+import com.example.bookrent.Exception.UserNotFoundException;
 import com.example.bookrent.Service.ReviewService;
+import com.example.bookrent.Service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,23 +16,34 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    public ReviewController(ReviewService reviewService) {
+    public ReviewController(ReviewService reviewService, UserService userService) {
         this.reviewService = reviewService;
+        this.userService = userService;
     }
 
     @PostMapping
-    public ReviewDto submitReview(@RequestParam Long userId, @RequestParam Long bookId, @RequestParam Integer rating, @RequestParam String reviewText) {
-        return reviewService.submitReview(userId, bookId, rating, reviewText);
+    public ResponseEntity<ReviewDto> submitReview(@RequestHeader("Authorization") String jwt,
+                                                  @RequestParam Long bookId,
+                                                  @RequestParam Double rating,
+                                                  @RequestParam String reviewText) throws UserNotFoundException {
+        // Find user by JWT
+        User user = userService.findUserByProfile(jwt);
+
+        ReviewDto reviewDto = reviewService.submitReview(user.getId(), bookId, rating, reviewText);
+        return new ResponseEntity<>(reviewDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/book/{bookId}")
-    public List<ReviewDto> getReviewsForBook(@PathVariable Long bookId) {
-        return reviewService.getReviewsForBook(bookId);
+    public ResponseEntity<List<ReviewDto>> getReviewsForBook(@PathVariable Long bookId) {
+        List<ReviewDto> reviews = reviewService.getReviewsForBook(bookId);
+        return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/book/{bookId}/average")
-    public Double getAverageRatingForBook(@PathVariable Long bookId) {
-        return reviewService.getAverageRatingForBook(bookId);
+    public ResponseEntity<Double> getAverageRatingForBook(@PathVariable Long bookId) {
+        Double averageRating = reviewService.getAverageRatingForBook(bookId);
+        return ResponseEntity.ok(averageRating);
     }
 }

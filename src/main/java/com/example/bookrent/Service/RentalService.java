@@ -9,4 +9,5 @@ public interface RentalService {
     String extendRental(Long rentalId, int extraDays);
     String returnBook(Long rentalId);
     List<RentalDto> getAllRentals();
+    public String payDebt(Long userId, double amount);
 }
