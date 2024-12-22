@@ -1,13 +1,15 @@
 package com.example.bookrent.Converter;
 
+import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Converter {
 
+public class Converter {
+    private static final ModelMapper modelMapper = new ModelMapper();
     public static <E, D> D convertToDto(E entity, Class<D> dtoClass) {
         try {
-            return dtoClass.getConstructor(entity.getClass()).newInstance(entity);
+            return modelMapper.map(entity,dtoClass);
         } catch (Exception e) {
             throw new RuntimeException("Error while converting entity to DTO", e);
         }
@@ -21,7 +23,7 @@ public class Converter {
 
     public static <E, D> E convertToEntity(D dto, Class<E> entityClass) {
         try {
-            return entityClass.getConstructor(dto.getClass()).newInstance(dto);
+            return modelMapper.map(dto, entityClass);
         } catch (Exception e) {
             throw new RuntimeException("Error while converting DTO to entity", e);
         }

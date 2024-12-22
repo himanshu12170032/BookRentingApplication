@@ -2,6 +2,7 @@ package com.example.bookrent.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll() // Whitelist H2 console
                         .requestMatchers(PUBLIC_APIS.toArray(new String[0])).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/books").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").authenticated() // Protect /api endpoints
                         .anyRequest().permitAll()) // Permit all other requests (optional)

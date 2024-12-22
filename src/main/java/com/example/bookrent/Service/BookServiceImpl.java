@@ -22,7 +22,7 @@ public class BookServiceImpl implements BookService{
     public List<BookDto> getAllBooks() {
         List<Book> books = bookRepo.findAll();
         List<BookDto> bookDtos = books.stream().map(this::convertToDTO).collect(Collectors.toList());
-        return List.of();
+        return bookDtos;
     }
     @Override
     public BookDto addBook(BookDto bookDTO) {
@@ -39,8 +39,8 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public List<BookDto> searchBooks(String title, String genere) {
-        List<Book> books = bookRepo.searchBooks(title, genere);
+    public List<BookDto> searchBooks(String title, String genre) {
+        List<Book> books = bookRepo.searchBooks(title, genre);
         return books.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class BookServiceImpl implements BookService{
 //                book.getGenre(),
 //                book.getRating(),
 //                book.getRentingPrice(),
-//                book.isAvailable()
+//                book.isAvailable();
 //        );
 
         return Converter.convertToDto(book,BookDto.class);
@@ -77,7 +77,7 @@ public class BookServiceImpl implements BookService{
     public List<BookDto> getPopularBooks() {
         List<Book> books = bookRepo.findAll();
         return books.stream()
-                .filter(book -> reviewService.getAverageRatingForBook(book.getId()) >= 4.0)  // Highlight books with average rating 4 or higher
+                .filter(book -> reviewService.getAverageRatingForBook(book.getId()) >= 4.0)
                 .sorted((b1, b2) -> Double.compare(reviewService.getAverageRatingForBook(b2.getId()), reviewService.getAverageRatingForBook(b1.getId())))
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

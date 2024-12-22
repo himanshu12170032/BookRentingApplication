@@ -14,8 +14,7 @@ public class BookDto {
     private String genre;
     private Double rating;
     private Double rentingPrice;
-    private boolean isAvailable;
-
+    private boolean available;
 
 }
 

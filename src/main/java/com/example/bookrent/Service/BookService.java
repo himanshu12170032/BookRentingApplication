@@ -9,7 +9,7 @@ public interface BookService {
     List<BookDto> getAllBooks();
     BookDto addBook(BookDto bookDTO);
     BookDto getBookById(Long id) throws ResourceNotFoundException;
-    public List<BookDto> searchBooks(String title, String genere);
+    public List<BookDto> searchBooks(String title, String genre);
     public List<BookDto> getPopularBooks();
     public List<BookDto> getHighlyRatedBooks();
 }

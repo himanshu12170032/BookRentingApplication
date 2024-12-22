@@ -39,13 +39,13 @@ public class BookController {
     @GetMapping("/search")
     public ResponseEntity<List<BookDto>> searchBooks(
             @RequestParam(required = false) String title,
-            @RequestParam(required = false) String author) {
-        List<BookDto> books = bookService.searchBooks(title, author);
+            @RequestParam(required = false) String genre) {
+        List<BookDto> books = bookService.searchBooks(title, genre);
         return ResponseEntity.ok(books);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<BookDto> addBook(
             @RequestBody BookDto bookDTO,
             @RequestHeader("Authorization") String jwt) throws UserNotFoundException {
@@ -55,8 +55,6 @@ public class BookController {
         if (!user.getRole().equals(Role.ADMIN)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-
-
         BookDto addedBook = bookService.addBook(bookDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedBook);
     }

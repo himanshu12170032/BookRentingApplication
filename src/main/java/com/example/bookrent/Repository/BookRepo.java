@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface BookRepo extends JpaRepository<Book,Long> {
-    @Query("SELECT u FROM Book u WHERE " +
-            "(:title IS NULL OR LOWER(u.title) LIKE LOWER(CONCAT('%', :title, '%'))) OR " +
-            "(:author IS NULL OR LOWER(u.author) LIKE LOWER(CONCAT('%', :author, '%')))")
-    List<Book> searchBooks(@Param("title") String title, @Param("author") String author);
-
+public interface BookRepo extends JpaRepository<Book, Long> {
+    @Query("SELECT b FROM Book b WHERE " +
+            "(:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
+            "(:genre IS NULL OR LOWER(b.genre) LIKE LOWER(CONCAT('%', :genre, '%')))")
+    List<Book> searchBooks(@Param("title") String title, @Param("genre") String genre);
 }
+
