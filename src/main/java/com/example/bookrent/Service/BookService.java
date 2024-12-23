@@ -10,6 +10,9 @@ public interface BookService {
     BookDto addBook(BookDto bookDTO);
     BookDto getBookById(Long id) throws ResourceNotFoundException;
     public List<BookDto> searchBooks(String title, String genre);
-    public List<BookDto> getPopularBooks();
+    public List<BookDto> getPopularBooks(Double ratingThreshold);
     public List<BookDto> getHighlyRatedBooks();
+    public Double getAverageRatingForBook(Long bookId);
+    public boolean existsById(Long bookId);
+    public BookDto getBookDtoWithAverageRating(Long bookId)  throws ResourceNotFoundException;
 }

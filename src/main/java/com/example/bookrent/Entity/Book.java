@@ -18,7 +18,6 @@ public class Book {
     private String title;
     private String author;
     private String genre;
-    private Double rating;
     private Double rentingPrice;
     @Builder.Default
     private boolean available = true;

@@ -55,6 +55,8 @@ public class AuthController {
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(),user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        System.out.println("Authentication: " + authentication);
+
         String token = jwtProvider.generateToken(authentication);
 
         AuthResponse authResponse = new AuthResponse();
@@ -72,6 +74,8 @@ public class AuthController {
 
             Authentication authentication = authenticate(username, password);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            System.out.println("Authentication: " + authentication);
 
             String token = jwtProvider.generateToken(authentication);
             AuthResponse response = new AuthResponse();

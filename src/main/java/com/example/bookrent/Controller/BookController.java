@@ -32,8 +32,10 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDto> getBookById(@PathVariable Long id) {
-        BookDto book = bookService.getBookById(id);
-        return ResponseEntity.ok(book);
+        BookDto bookDto = bookService.getBookById(id);
+        Double averageRating = bookService.getAverageRatingForBook(id); // Calculate the average rating
+        bookDto.setRentingPrice(averageRating);
+        return ResponseEntity.ok(bookDto);
     }
 
     @GetMapping("/search")
@@ -59,9 +61,10 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedBook);
     }
 
+
     @GetMapping("/popular")
-    public List<BookDto> getPopularBooks() {
-        return bookService.getPopularBooks();
+    public List<BookDto> getPopularBooks(@RequestParam(value = "rating", required = false, defaultValue = "3.0") Double ratingThreshold) {
+        return bookService.getPopularBooks(ratingThreshold);
     }
 
     @GetMapping("/highly-rated")

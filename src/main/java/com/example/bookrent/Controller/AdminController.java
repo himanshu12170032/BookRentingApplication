@@ -1,4 +1,5 @@
 package com.example.bookrent.Controller;
+import com.example.bookrent.Dto.RentalDto;
 import com.example.bookrent.Entity.User;
 import com.example.bookrent.Service.*;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,12 @@ public class AdminController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/rentals")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RentalDto> getRentals() {
+        return rentalService.getAllRentals();
     }
 }
 

@@ -12,4 +12,5 @@ public class WalletDto {
 
     private Long userId;
     private Double balance;
+    private Double debt = 0.0;
 }

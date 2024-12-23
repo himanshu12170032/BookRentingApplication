@@ -49,4 +49,10 @@ public class ReviewServiceImpl implements ReviewService{
         return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
     }
 
+    @Override
+    public List<ReviewDto> getAllReviewsByUser(Long userId) {
+        List<Review> reviews = reviewRepo.findByUserId(userId);
+        return reviews.stream().map(review -> new ReviewDto(review.getId(), review.getUser().getId(), review.getBook().getId(), review.getRating(), review.getReviewText())).collect(Collectors.toList());
+    }
+
 }

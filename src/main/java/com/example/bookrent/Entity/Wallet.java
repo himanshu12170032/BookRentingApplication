@@ -15,9 +15,10 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
-    private Double balance;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    private double debt = 0.0;
+    private Double balance = 0.0;
+    private Double debt = 0.0;
 }

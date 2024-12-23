@@ -12,9 +12,9 @@ public class BookDto {
     private String title;
     private String author;
     private String genre;
-    private Double rating;
     private Double rentingPrice;
     private boolean available;
+    private Double averageRating;
 
 }
 

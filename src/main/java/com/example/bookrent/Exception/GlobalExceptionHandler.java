@@ -31,6 +31,29 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Access Denied", req.getDescription(false), LocalDateTime.now());
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);  // You can also use HttpStatus.UNAUTHORIZED if needed
     }
+    @ExceptionHandler(WalletAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleWalletAlreadyExists(WalletAlreadyExistsException e, WebRequest req) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+        return  new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BookAlreadyReservedException.class)
+    public ResponseEntity<ErrorResponse> handleBookAlreadyReserved(BookAlreadyReservedException e, WebRequest req) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+        return  new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DebtPendingException.class)
+    public ResponseEntity<ErrorResponse> handleDebtPending(DebtPendingException e, WebRequest req) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+        return  new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BookNotReservedByUserException.class)
+    public ResponseEntity<ErrorResponse> handleBookNotReservedByUser(BookNotReservedByUserException e, WebRequest req) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+        return  new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex,WebRequest req) {
